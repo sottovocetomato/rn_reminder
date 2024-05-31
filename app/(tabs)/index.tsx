@@ -1,70 +1,100 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Pressable, Text, View } from "react-native";
+import { Collapsible } from "@/components/Collapsible";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemedText } from "@/components/ThemedText";
+import Input from "@/components/form/Input";
+import { useForm } from "react-hook-form";
+import styles from "@/assets/styles/styles";
+import BaseButton from "@/components/form/BaseButton";
+import {
+  getSensetiveData,
+  removeSensetiveData,
+  storeSensetiveData,
+} from "@/helpers/storage";
+import { useEffect, useState } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Index() {
+  const {
+    control,
+    handleSubmit,
+    // formState: { errors },
+  } = useForm({
+    defaultValues: {
+      // email: "i@rdbx.ru",
+      // password: "ea1c2o1m",
+      goal: "",
+      time: "",
+    },
+  });
+  const [goals, setGoals] = useState();
+  useEffect(() => {
+    const get = async () => {
+      // await removeSensetiveData("tasks");
+      const currentTasks = await getSensetiveData("goals");
+      // console.log(currentTasks, "currentTasks");
+      // console.log(tasks, "tasks");
 
-export default function HomeScreen() {
+      setGoals(JSON.parse(currentTasks || "[]"));
+    };
+    get();
+  }, []);
+
+  const onSubmit = async (data) => {
+    const getData = await getSensetiveData("goals");
+    let prevData = JSON.parse(getData || "[]");
+    prevData.push({ goal: data.goal, time: data.time });
+    console.log(prevData, "prevData");
+    setGoals(prevData);
+    console.log(goals, "goals");
+    console.log(JSON.stringify(goals), "JSON.stringify(goals)");
+    await storeSensetiveData("tasks", JSON.stringify(goals));
+  };
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      ]}
+    >
+      <ThemedText>Hello!</ThemedText>
+      <ThemedText>{goals}</ThemedText>
+      <Input
+        control={control}
+        name="todo"
+        clearable={true}
+        rules={{
+          required: {
+            value: true,
+            message: "Поле необходимо заполнить",
+          },
+        }}
+        label={"Задача"}
+      ></Input>
+      <Input
+        control={control}
+        name="time"
+        type="date"
+        clearable={true}
+        dateMode="time"
+        rules={{
+          required: {
+            value: true,
+            message: "Поле необходимо заполнить",
+          },
+        }}
+        label={"Время"}
+      ></Input>
+
+      <BaseButton
+        onPress={handleSubmit(onSubmit)}
+        title={"Save"}
+        testID="LoginButton"
+      />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
