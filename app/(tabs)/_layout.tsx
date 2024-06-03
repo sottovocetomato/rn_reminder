@@ -28,9 +28,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="wishes"
+        name="goals"
         options={{
-          title: "Wishes",
+          title: "Goals",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "heart" : "heart-outline"}
@@ -40,9 +40,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="notif"
+        name="wishes"
         options={{
-          title: "Notifications",
+          title: "Wishes",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "heart" : "heart-outline"}

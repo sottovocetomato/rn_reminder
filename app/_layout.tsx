@@ -9,8 +9,19 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
+import { registerForPushNotificationsAsync } from "@/tools/Notifications";
+import * as Notifications from "expo-notifications";
 
 SplashScreen.preventAutoHideAsync();
+// Notifications.dismissAllNotificationsAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -20,12 +31,16 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      registerForPushNotificationsAsync().then((token) => {
+        console.log(token, "token");
+      });
     }
   }, [loaded]);
 
   if (!loaded) {
     return null;
   }
+
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

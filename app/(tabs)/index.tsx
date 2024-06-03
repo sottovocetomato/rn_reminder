@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Dimensions, Pressable, Text, View } from "react-native";
 import { Collapsible } from "@/components/Collapsible";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
@@ -7,12 +7,20 @@ import { useForm } from "react-hook-form";
 import styles from "@/assets/styles/styles";
 import BaseButton from "@/components/form/BaseButton";
 import {
+  getFromStorage,
   getSensetiveData,
+  removeFromStorage,
   removeSensetiveData,
+  setInStorage,
   storeSensetiveData,
 } from "@/helpers/storage";
 import { useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { schedulePushNotification } from "@/tools/Notifications";
+import { FlashList } from "@shopify/flash-list";
+import { useIsFocused } from "@react-navigation/core";
+import { Link, router } from "expo-router";
+import * as Notifications from "expo-notifications";
 
 export default function Index() {
   const {
@@ -27,73 +35,67 @@ export default function Index() {
       time: "",
     },
   });
-  const [goals, setGoals] = useState();
-  useEffect(() => {
-    const get = async () => {
-      // await removeSensetiveData("tasks");
-      const currentTasks = await getSensetiveData("goals");
-      // console.log(currentTasks, "currentTasks");
-      // console.log(tasks, "tasks");
-
-      setGoals(JSON.parse(currentTasks || "[]"));
-    };
-    get();
-  }, []);
-
-  const onSubmit = async (data) => {
-    const getData = await getSensetiveData("goals");
-    let prevData = JSON.parse(getData || "[]");
-    prevData.push({ goal: data.goal, time: data.time });
-    console.log(prevData, "prevData");
-    setGoals(prevData);
-    console.log(goals, "goals");
-    console.log(JSON.stringify(goals), "JSON.stringify(goals)");
-    await storeSensetiveData("tasks", JSON.stringify(goals));
+  const [goals, setGoals] = useState([]);
+  const isFocused = useIsFocused();
+  const removeGoal = async (item) => {
+    await Notifications.cancelScheduledNotificationAsync(item.notifId);
+    const notifs = await Notifications.getAllScheduledNotificationsAsync();
+    console.log(notifs, "Notifications");
+    const filteredGoals = goals.filter((el) => el.id !== item.id);
+    setGoals(filteredGoals);
+    await setInStorage("goals", filteredGoals);
   };
+  useEffect(() => {
+    if (isFocused) {
+      const getGoalsFromStorage = async () => {
+        // await removeFromStorage("goals");
+        const currentGoals = (await getFromStorage("goals")) || [];
+        setGoals(currentGoals);
+      };
+      getGoalsFromStorage();
+    }
+  }, [isFocused]);
+
   return (
     <SafeAreaView
       style={[
-        styles.container,
         {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          height: Dimensions.get("screen").height,
+          width: Dimensions.get("screen").width,
+          paddingHorizontal: 20,
         },
       ]}
     >
-      <ThemedText>Hello!</ThemedText>
-      <ThemedText>{goals}</ThemedText>
-      <Input
-        control={control}
-        name="todo"
-        clearable={true}
-        rules={{
-          required: {
-            value: true,
-            message: "Поле необходимо заполнить",
-          },
+      <FlashList
+        data={goals}
+        renderItem={({ item }) => {
+          return (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText>{item.id}</ThemedText>
+              <ThemedText>{item.goal}</ThemedText>
+              <ThemedText>{item.time}</ThemedText>
+              <ThemedText
+                onPress={() => {
+                  router.push({
+                    pathname: "/goals",
+                    params: item,
+                  });
+                }}
+              >
+                Edit
+              </ThemedText>
+              <ThemedText onPress={() => removeGoal(item)}>Delete</ThemedText>
+            </View>
+          );
         }}
-        label={"Задача"}
-      ></Input>
-      <Input
-        control={control}
-        name="time"
-        type="date"
-        clearable={true}
-        dateMode="time"
-        rules={{
-          required: {
-            value: true,
-            message: "Поле необходимо заполнить",
-          },
-        }}
-        label={"Время"}
-      ></Input>
-
-      <BaseButton
-        onPress={handleSubmit(onSubmit)}
-        title={"Save"}
-        testID="LoginButton"
+        estimatedItemSize={16}
       />
     </SafeAreaView>
   );
