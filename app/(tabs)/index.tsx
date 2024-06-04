@@ -1,4 +1,10 @@
-import { Dimensions, Pressable, Text, View } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Collapsible } from "@/components/Collapsible";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ThemedText";
@@ -25,6 +31,7 @@ import { ThemedView } from "@/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import ItemCard from "@/components/ItemCard";
 
 export default function Index() {
   const {
@@ -39,7 +46,6 @@ export default function Index() {
       time: "",
     },
   });
-  const currentColor = useThemeColor({}, "text");
   const [goals, setGoals] = useState([]);
   const isFocused = useIsFocused();
   const removeGoal = async (item) => {
@@ -50,6 +56,7 @@ export default function Index() {
     setGoals(filteredGoals);
     await setInStorage("goals", filteredGoals);
   };
+
   useEffect(() => {
     if (isFocused) {
       const getGoalsFromStorage = async () => {
@@ -71,93 +78,17 @@ export default function Index() {
         },
       ]}
     >
+      {!goals.length && (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ThemedText>No goals yet...</ThemedText>
+        </View>
+      )}
       <FlashList
         data={goals}
         renderItem={({ item }) => {
-          return (
-            <ThemedView
-              style={{
-                flex: 1,
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 20,
-                borderRadius: 5,
-                paddingHorizontal: 10,
-                paddingVertical: 10,
-              }}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <ThemedText style={{ fontSize: 18 }}>{item.goal}</ThemedText>
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  flexDirection: "row",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  marginVertical: 20,
-                }}
-              >
-                <View
-                  style={{
-                    flex: 2,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                  }}
-                >
-                  <Ionicons
-                    size={28}
-                    style={[{ marginRight: 5 }]}
-                    name="stopwatch-outline"
-                    color={currentColor}
-                  />
-                  <ThemedText>{item.time}</ThemedText>
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <BaseButton
-                    onPress={() => {
-                      router.push({
-                        pathname: "/goals",
-                        params: item,
-                      });
-                    }}
-                    extraStyle={{ width: 50, height: 40, borderRadius: 5 }}
-                    icon={"pencil-outline"}
-                    color={currentColor}
-                  ></BaseButton>
-                  <BaseButton
-                    onPress={() => removeGoal(item)}
-                    extraStyle={{
-                      width: 50,
-                      height: 40,
-                      borderRadius: 5,
-                      backgroundColor: "red",
-                    }}
-                    icon={"trash-outline"}
-                    color={currentColor}
-                  ></BaseButton>
-                </View>
-              </View>
-            </ThemedView>
-          );
+          return <ItemCard item={item} onDeleteAction={removeGoal} />;
         }}
         estimatedItemSize={16}
       />

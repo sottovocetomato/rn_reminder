@@ -40,7 +40,7 @@ export default function Input({
       render={({ field: { onChange, value }, fieldState }) => (
         <View style={{ width: "100%", marginVertical: 15 }}>
           <View style={[styles?.inputLabel, { alignSelf: "flex-start" }]}>
-            <Text style={[{ color: "grey", fontSize: 22 }, labelClass]}>
+            <Text style={[{ color: "grey", fontSize: 18 }, labelClass]}>
               {label}
             </Text>
           </View>

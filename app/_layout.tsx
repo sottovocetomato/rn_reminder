@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { registerForPushNotificationsAsync } from "@/tools/Notifications";
 import * as Notifications from "expo-notifications";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 // Notifications.dismissAllNotificationsAsync();
@@ -44,9 +45,11 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
+        <GestureHandlerRootView>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+        </GestureHandlerRootView>
       </ThemeProvider>
     </SafeAreaProvider>
   );
