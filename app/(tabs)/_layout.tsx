@@ -39,18 +39,18 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="wishes"
-        options={{
-          title: "Wishes",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "heart" : "heart-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
+      {/*<Tabs.Screen*/}
+      {/*  name="wishes"*/}
+      {/*  options={{*/}
+      {/*    title: "Wishes",*/}
+      {/*    tabBarIcon: ({ color, focused }) => (*/}
+      {/*      <TabBarIcon*/}
+      {/*        name={focused ? "heart" : "heart-outline"}*/}
+      {/*        color={color}*/}
+      {/*      />*/}
+      {/*    ),*/}
+      {/*  }}*/}
+      {/*/>*/}
     </Tabs>
   );
 }

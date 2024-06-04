@@ -21,6 +21,10 @@ import { FlashList } from "@shopify/flash-list";
 import { useIsFocused } from "@react-navigation/core";
 import { Link, router } from "expo-router";
 import * as Notifications from "expo-notifications";
+import { ThemedView } from "@/components/ThemedView";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Index() {
   const {
@@ -35,6 +39,7 @@ export default function Index() {
       time: "",
     },
   });
+  const currentColor = useThemeColor({}, "text");
   const [goals, setGoals] = useState([]);
   const isFocused = useIsFocused();
   const removeGoal = async (item) => {
@@ -62,7 +67,7 @@ export default function Index() {
         {
           height: Dimensions.get("screen").height,
           width: Dimensions.get("screen").width,
-          paddingHorizontal: 20,
+          paddingHorizontal: 10,
         },
       ]}
     >
@@ -70,29 +75,88 @@ export default function Index() {
         data={goals}
         renderItem={({ item }) => {
           return (
-            <View
+            <ThemedView
               style={{
                 flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: "column",
+                justifyContent: "center",
                 alignItems: "center",
+                marginTop: 20,
+                borderRadius: 5,
+                paddingHorizontal: 10,
+                paddingVertical: 10,
               }}
             >
-              <ThemedText>{item.id}</ThemedText>
-              <ThemedText>{item.goal}</ThemedText>
-              <ThemedText>{item.time}</ThemedText>
-              <ThemedText
-                onPress={() => {
-                  router.push({
-                    pathname: "/goals",
-                    params: item,
-                  });
+              <View
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                Edit
-              </ThemedText>
-              <ThemedText onPress={() => removeGoal(item)}>Delete</ThemedText>
-            </View>
+                <ThemedText style={{ fontSize: 18 }}>{item.goal}</ThemedText>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  marginVertical: 20,
+                }}
+              >
+                <View
+                  style={{
+                    flex: 2,
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    size={28}
+                    style={[{ marginRight: 5 }]}
+                    name="stopwatch-outline"
+                    color={currentColor}
+                  />
+                  <ThemedText>{item.time}</ThemedText>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <BaseButton
+                    onPress={() => {
+                      router.push({
+                        pathname: "/goals",
+                        params: item,
+                      });
+                    }}
+                    extraStyle={{ width: 50, height: 40, borderRadius: 5 }}
+                    icon={"pencil-outline"}
+                    color={currentColor}
+                  ></BaseButton>
+                  <BaseButton
+                    onPress={() => removeGoal(item)}
+                    extraStyle={{
+                      width: 50,
+                      height: 40,
+                      borderRadius: 5,
+                      backgroundColor: "red",
+                    }}
+                    icon={"trash-outline"}
+                    color={currentColor}
+                  ></BaseButton>
+                </View>
+              </View>
+            </ThemedView>
           );
         }}
         estimatedItemSize={16}
