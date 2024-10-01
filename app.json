@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "rn_notify_me",
+    "name": "Daily Goals",
     "slug": "rn_notify_me",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/reminder.png",
+    "icon": "./assets/images/daily_goals_cover.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/reminder_loader.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,9 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/reminder.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.adrstr.rn_notify_me"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +33,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1369d391-1785-42bf-ba69-925a1c2f5e48"
+      }
     }
   }
 }

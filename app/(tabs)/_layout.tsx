@@ -18,7 +18,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Goals",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
@@ -30,10 +30,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="goals"
         options={{
-          title: "Goals",
+          title: "Add Goal",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "heart" : "heart-outline"}
+              name={
+                focused
+                  ? "checkmark-done-circle"
+                  : "checkmark-done-circle-outline"
+              }
               color={color}
             />
           ),

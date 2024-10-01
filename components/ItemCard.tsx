@@ -45,6 +45,7 @@ export default function ItemCard({ item, className, onDeleteAction }) {
         translateX.value = withSpring(0, { damping: 50, stiffness: 100 });
       } else {
         runOnJS(onDeleteAction)(item);
+        translateX.value = 0;
       }
     });
   const containerStyle = useAnimatedStyle(() => {

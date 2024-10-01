@@ -14,7 +14,7 @@ import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
-// Notifications.dismissAllNotificationsAsync();
+Notifications.dismissAllNotificationsAsync();
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

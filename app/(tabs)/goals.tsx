@@ -13,14 +13,23 @@ import {
   setInStorage,
   storeSensetiveData,
 } from "@/helpers/storage";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { schedulePushNotification } from "@/tools/Notifications";
 import { FlashList } from "@shopify/flash-list";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as Notifications from "expo-notifications";
 
 export default function Goals() {
+  useFocusEffect(
+    useCallback(() => {
+      // Do something when the screen is focused
+
+      return () => {
+        useForm().reset();
+      };
+    }, [])
+  );
   const params = useLocalSearchParams();
   const { id: editId, goal, time } = params;
   const {
@@ -42,7 +51,8 @@ export default function Goals() {
     "#7c8abf",
     "#9c7cbf",
     "#b88fba",
-    "#bf7c7c",
+    "#f37b7b",
+    // "#bf7c7c",
   ];
 
   const onSubmit = async (data) => {
@@ -72,16 +82,19 @@ export default function Goals() {
         time: data.time,
         id: prevData.length + 1,
         backgroundColor:
-          backgroundColors[
-            Math.floor(Math.random() * (backgroundColors.length + 1))
-          ],
+          backgroundColors[Math.floor(Math.random() * backgroundColors.length)],
         notifId,
       });
     }
 
     console.log(prevData, "prevData");
-
     await setInStorage("goals", prevData);
+    try {
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      console.log("All pending notifications have been canceled.");
+    } catch (error) {
+      console.error("Error canceling notifications:", error);
+    }
 
     router.navigate("");
   };
