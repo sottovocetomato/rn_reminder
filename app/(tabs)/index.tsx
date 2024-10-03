@@ -63,7 +63,9 @@ export default function Index() {
         // await removeFromStorage("goals");
         const currentGoals = (await getFromStorage("goals")) || [];
         setGoals(currentGoals);
+        console.log(currentGoals, "     console.log(currentGoals);");
       };
+
       getGoalsFromStorage();
     }
   }, [isFocused]);
@@ -72,6 +74,7 @@ export default function Index() {
     <SafeAreaView
       style={[
         {
+          flex: 1,
           height: Dimensions.get("screen").height,
           width: Dimensions.get("screen").width,
           paddingHorizontal: 10,
@@ -90,7 +93,7 @@ export default function Index() {
         renderItem={({ item }) => {
           return <ItemCard item={item} onDeleteAction={removeGoal} />;
         }}
-        estimatedItemSize={16}
+        estimatedItemSize={50}
       />
     </SafeAreaView>
   );

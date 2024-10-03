@@ -4,21 +4,21 @@
     "slug": "rn_notify_me",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/daily_goals_cover.png",
+    "icon": "./assets/images/dailyGoalsCover.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/dailyGoalsCoverSplash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#543b69"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/dailyGoalsCover.png",
+        "backgroundColor": "#543b69"
       },
       "package": "com.adrstr.rn_notify_me"
     },

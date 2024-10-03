@@ -21,20 +21,12 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as Notifications from "expo-notifications";
 
 export default function Goals() {
-  useFocusEffect(
-    useCallback(() => {
-      // Do something when the screen is focused
-
-      return () => {
-        useForm().reset();
-      };
-    }, [])
-  );
   const params = useLocalSearchParams();
   const { id: editId, goal, time } = params;
   const {
     control,
     handleSubmit,
+    reset,
     // formState: { errors },
   } = useForm({
     defaultValues: {
@@ -95,7 +87,7 @@ export default function Goals() {
     } catch (error) {
       console.error("Error canceling notifications:", error);
     }
-
+    reset();
     router.navigate("");
   };
   return (

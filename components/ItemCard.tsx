@@ -26,6 +26,7 @@ export default function ItemCard({ item, className, onDeleteAction }) {
   const MAX_TRANSLATE_X = -SCREEN_WIDTH / 2;
   const context = useSharedValue({ x: 0 });
   const gesture = Gesture.Pan()
+    .activeOffsetX([-10, 10])
     .minDistance(25)
     .onBegin(() => {
       // console.log(translateY.value, 'pan on start');
@@ -45,7 +46,7 @@ export default function ItemCard({ item, className, onDeleteAction }) {
         translateX.value = withSpring(0, { damping: 50, stiffness: 100 });
       } else {
         runOnJS(onDeleteAction)(item);
-        translateX.value = 0;
+        translateX.value = withSpring(0, { damping: 50, stiffness: 100 });
       }
     });
   const containerStyle = useAnimatedStyle(() => {
